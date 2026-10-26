@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KOPASS</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="KOPASS">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+/* KOPASS: แอปผู้บริหาร KOSIE — เปิดเมนูผู้บริหาร (ใบส้ม ?p=kosie) ในกรอบเต็มจอ · ไม่มีรหัส · ลิงก์ลับจำในเครื่องครั้งเดียวผ่าน #k=… (ไม่อยู่ในโค้ด) */
+html,body{margin:0;height:100%;background:#F4F4F4;font-family:"Leelawadee UI","Noto Sans Thai",Tahoma,system-ui,sans-serif;color:#111}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+#frame{flex:1;border:0;width:100%;height:100%;background:#F4F4F4}
+#setup{display:none;position:fixed;inset:0;background:#F4F4F4;align-items:center;justify-content:center;padding:20px}
+#setup .box{background:#fff;border:1px solid #D9D9D9;border-radius:18px;padding:26px 22px;max-width:420px;width:100%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+#setup img{width:84px;height:84px;border-radius:20px}
+#setup h1{font-size:22px;margin:12px 0 4px;letter-spacing:2px}
+#setup p{color:#555;font-size:14px;line-height:1.7;margin:0 0 14px}
+#setup input{width:100%;padding:12px;border:1px solid #BDBDBD;border-radius:12px;font:inherit;font-size:14px;box-sizing:border-box}
+#setup button{margin-top:10px;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+#load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#F4F4F4;transition:opacity .3s}
+#load .k{width:92px;height:92px;border-radius:22px;animation:kp 1.2s ease-in-out infinite}
+@keyframes kp{50%{opacity:.45;transform:scale(.96)}}
+</style>
+</head>
+<body>
+<div id="app"><iframe id="frame" title="KOPASS" allow="clipboard-write" src="about:blank"></iframe></div>
+<div id="load"><img class="k" src="icon-192.png" alt="KOPASS"></div>
+<div id="setup"><div class="box">
+  <img src="icon-192.png" alt="">
+  <h1>KOPASS</h1>
+  <p>ตั้งค่าครั้งแรก: วางลิงก์เมนูผู้บริหารที่ได้รับจากพี่ฝน<br>ระบบจะจำไว้ในเครื่องนี้ ครั้งต่อไปเปิดได้ทันที</p>
+  <input id="kin" placeholder="https://script.google.com/macros/s/…/exec?p=kosie&k=…">
+  <button id="kok">เริ่มใช้งาน</button>
+</div></div>
+<script>
+var UB="https://script.google.com/macros/s/AKfycbxbfhl3pXAAhFNm84Vl7BHFxVgyozOp0ClxUXuaW05SWAvigiTuNxTf9pC_lS_tV4IK-A/exec";
+function $(i){return document.getElementById(i);}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||"";localStorage.setItem(k,v);}catch(e){return "";}}
+/* ลิงก์ตั้งค่าครั้งเดียว: …/kopass/#k=<รหัส> → จำลิงก์ในเครื่อง แล้วลบรหัสออกจากแถบที่อยู่ */
+(function(){var m=/^#k=([0-9a-f]{16,64})$/.exec(location.hash||"");if(!m)return;ls("kopass_url",UB+"?p=kosie&k="+m[1]);try{history.replaceState(null,"",location.pathname);}catch(e){location.hash="";}})();
+function open(u){var f=$("frame");f.onload=function(){var l=$("load");l.style.opacity="0";setTimeout(function(){l.style.display="none";},320);};f.src=u+(u.indexOf("?")>=0?"&":"?")+"theme=kopass&app=1";setTimeout(function(){var l=$("load");l.style.opacity="0";setTimeout(function(){l.style.display="none";},320);},9000);}
+var U=ls("kopass_url");
+if(U){open(U);}else{$("load").style.display="none";$("setup").style.display="flex";}
+$("kok").onclick=function(){var u=$("kin").value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+p=kosie/.test(u)){$("kin").style.borderColor="#E5484D";return;}ls("kopass_url",u);$("setup").style.display="none";$("load").style.display="flex";$("load").style.opacity="1";open(u);};
+</script>
+</body>
+</html>
